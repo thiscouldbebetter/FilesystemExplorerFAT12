@@ -1,0 +1,74 @@
+<html>
+<body>
+
+	<h3>FAT12 Filesystem Explorer</h3>
+
+	<p>Upload a valid disk image in the FAT12 format to explore its file and directory hierarchy.</p>
+
+	<div id="divMain"></div>
+
+<script src="Base64Encoder.js"></script>
+<script src="BitStream.js"></script>
+<script src="ByteHelper.js"></script>
+<script src="ByteStream.js"></script>
+<script src="FileHelper.js"></script>
+<script src="FilesystemFAT12.js"></script>
+<script src="FilesystemFAT12Directory.js"></script>
+<script src="FilesystemFAT12DirectoryEntry.js"></script>
+<script src="FilesystemFAT12DirectoryEntryAttributes.js"></script>
+<script src="FilesystemFAT12FileAllocationTable.js"></script>
+<script src="Globals.js"></script>
+
+<script>
+
+// UI event handlers.
+
+function handleEventInputFileChanged(event)
+{
+	var inputFile = event.target;
+	var fileToLoad = inputFile.files[0];
+	FileHelper.loadFileAsBinaryString
+	(
+		fileToLoad,
+		handleEventInputFileChanged_2
+	);
+}
+
+function handleEventInputFileChanged_2(fileAsBinaryString)
+{
+	var fileAsBytes = ByteHelper.binaryStringToBytes
+	(
+		fileAsBinaryString
+	);
+
+	var filesystemFAT12 = FilesystemFAT12.fromBytes
+	(
+		fileAsBytes
+	);
+
+	Globals.Instance.initialize(filesystemFAT12);
+}
+
+// main
+
+function main()
+{
+	var divMain = document.getElementById("divMain");
+
+	var labelDiskImageFile = document.createElement("label");
+	labelDiskImageFile.innerHTML = "Disk Image File:";
+	divMain.appendChild(labelDiskImageFile);
+
+	var inputFile = document.createElement("input");
+	inputFile.type = "file";
+	inputFile.onchange = handleEventInputFileChanged;
+	divMain.appendChild(inputFile);
+}
+
+// run
+
+main();
+
+</script>
+</body>
+</html>
