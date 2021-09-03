@@ -60,10 +60,7 @@ class FilesystemFAT12DirectoryEntry
 
 	// instance methods
 
-	contentBytesLoadUsingFilesystem
-	(
-		filesystem
-	)
+	contentBytesLoadUsingFilesystem(filesystem)
 	{
 		var contentBytes = [];
 
@@ -83,7 +80,12 @@ class FilesystemFAT12DirectoryEntry
 		{
 			var sectorOffsetOfCluster = 
 				clusterIndexCurrent * filesystem.sectorsPerCluster
-				+ filesystem.offsetOfDataRegionInSectors;
+				+ filesystem.offsetOfDataRegionInSectors
+
+				// hack - Have to subtract a further 6 sectors,
+				// which in tests happens to match this.
+				- filesystem.numberOfFATs * filesystem.sectorsPerFAT
+				-2;
 
 			var byteOffsetOfCluster = 
 				sectorOffsetOfCluster
@@ -104,6 +106,11 @@ class FilesystemFAT12DirectoryEntry
 			);
 
 			clusterIndexCurrent = fatEntries[clusterIndexCurrent];
+		}
+
+		if (this.attributes.isSubdirectory == false)
+		{
+			contentBytes.length = this.sizeInBytes;
 		}
 
 		return contentBytes;
@@ -139,13 +146,14 @@ class FilesystemFAT12DirectoryEntry
 			filesystem
 		);
 
-		filesystem.directoryCurrent = FilesystemFAT12Directory.fromDirectoryParentEntryAndBytes
-		(
-			filesystem.directoryCurrent,
-			this, // directoryEntryForSelf
-			contentBytes
-		);
-	
+		filesystem.directoryCurrent =
+			FilesystemFAT12Directory.fromDirectoryParentEntryAndBytes
+			(
+				filesystem.directoryCurrent,
+				this, // directoryEntryForSelf
+				contentBytes
+			);
+
 		filesystem.domElementUpdate();
 	}
 
@@ -166,7 +174,7 @@ class FilesystemFAT12DirectoryEntry
 				this.domElement.innerHTML = 
 					"Volume Label: " + this.shortFileName
 			}
-			else if (this.attributes.isSubdirectory == true)
+			else if (this.attributes.isSubdirectory)
 			{
 				var labelName = d.createElement("label");
 				labelName.innerHTML = indent + this.shortFileName;

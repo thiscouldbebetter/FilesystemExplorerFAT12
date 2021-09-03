@@ -80,7 +80,7 @@ class FilesystemFAT12Directory
 		}
 
 		var returnValue = new FilesystemFAT12Directory
-		(			
+		(
 			directoryParent,
 			directoryEntryForSelf,
 			directoryEntries

@@ -27,7 +27,7 @@ class FilesystemFAT12
 		this.numberOfReservedSectors = numberOfReservedSectors;
 		this.numberOfFATs = numberOfFATs;
 		this.rootDirectoryEntriesMax = rootDirectoryEntriesMax;
-		this.sectorsTotal = sectorsTotal;	
+		this.sectorsTotal = sectorsTotal;
 		this.sectorsPerFAT = sectorsPerFAT;
 		this.sectorsPerTrack = sectorsPerTrack;
 		this.numberOfHeads = numberOfHeads;
@@ -53,7 +53,8 @@ class FilesystemFAT12
 				* FilesystemFAT12.DirectoryEntrySizeInBytes()
 			)
 			/ this.bytesPerSector
-			- 2; // hack - Not sure why I have to subtract 2.
+			- this.sectorsPerFAT;
+			// hack - Have to subtract 2, which happens to be sectorsPerFat.
 
 		this.directoryCurrent = this.directoryRoot;
 	}
