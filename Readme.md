@@ -28,8 +28,8 @@ Linux
 7. Enter the command "w" to write the specified changes to the disk image file and end the fdisk session.
 8. Back at the system command prompt, enter the command "mkfs --type=fat FilesystemFAT12.img".
 9. Run the command "mkdir FilesystemFAT12" to create a directory to mount the disk image to.
-10. Run the command "mount FilesystemFAT12.img FilesystemFAT12" to mount the disk image to the newly created directory.
-11. In the File Explorer, right-click, the FilesystemFAT12 directory and select "Open as root" from the context menu that appears.
+10. Run the command "sudo mount FilesystemFAT12.img FilesystemFAT12" to mount the disk image to the newly created directory.
+11. In the File Explorer, right-click, the FilesystemFAT12 directory and select "Open as root" from the context menu that appears, then supply the root password.
 12. Create some directories and simple test files (perhaps .txt files) on the mounted drive.
 13. Back at the command prompt, run the command "sudo umount FilesystemFAT12" to unmount the disk image.
 
